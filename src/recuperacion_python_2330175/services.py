@@ -1,0 +1,1 @@
+"""Funciones de gestión para las mascotas de la clínica veterinaria."""

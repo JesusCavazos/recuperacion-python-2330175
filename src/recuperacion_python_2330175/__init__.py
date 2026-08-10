@@ -1,2 +1,5 @@
-def main() -> None:
-    print("Hello from recuperacion-python-2330175!")
+"""Sistema de gestión para una clínica veterinaria."""
+
+from .models import Mascota
+
+__all__ = ["Mascota"]
