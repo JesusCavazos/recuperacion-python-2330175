@@ -3,23 +3,59 @@
 from .models import Mascota
 
 
-def registrar_mascota(mascotas: list[Mascota], mascota: Mascota) -> None:
-    """Agrega una mascota a la lista."""
-    mascotas.append(mascota)
-
-
-def mostrar_mascotas(mascotas: list[Mascota]) -> list[Mascota]:
-    """Devuelve todas las mascotas registradas."""
-    return mascotas
-
-
-def buscar_mascota(mascotas: list[Mascota], mascota_id: str) -> Mascota | None:
+def buscar_mascota(
+    mascotas: list[Mascota],
+    mascota_id: str,
+) -> Mascota | None:
     """Busca una mascota por su identificador."""
     for mascota in mascotas:
         if mascota.id == mascota_id:
             return mascota
 
     return None
+
+
+def validar_mascota(mascota: Mascota) -> None:
+    """Valida que los datos de una mascota sean correctos."""
+    if not mascota.id.strip():
+        raise ValueError("El ID no puede estar vacío.")
+
+    if not mascota.nombre.strip():
+        raise ValueError("El nombre no puede estar vacío.")
+
+    if not mascota.especie.strip():
+        raise ValueError("La especie no puede estar vacía.")
+
+    if not isinstance(mascota.edad, int):
+        raise TypeError("La edad debe ser un número entero.")
+
+    if mascota.edad < 0:
+        raise ValueError("La edad no puede ser negativa.")
+
+    if not isinstance(mascota.peso, (int, float)):
+        raise TypeError("El peso debe ser un número.")
+
+    if mascota.peso <= 0:
+        raise ValueError("El peso debe ser mayor que cero.")
+
+
+def registrar_mascota(
+    mascotas: list[Mascota],
+    mascota: Mascota,
+) -> bool:
+    """Valida y registra una mascota si su ID no está repetido."""
+    validar_mascota(mascota)
+
+    if buscar_mascota(mascotas, mascota.id) is not None:
+        return False
+
+    mascotas.append(mascota)
+    return True
+
+
+def mostrar_mascotas(mascotas: list[Mascota]) -> list[Mascota]:
+    """Devuelve todas las mascotas registradas."""
+    return mascotas
 
 
 def actualizar_mascota(
@@ -36,6 +72,16 @@ def actualizar_mascota(
     if mascota is None:
         return False
 
+    datos_actualizados = Mascota(
+        mascota_id,
+        nombre,
+        especie,
+        edad,
+        peso,
+    )
+
+    validar_mascota(datos_actualizados)
+
     mascota.nombre = nombre
     mascota.especie = especie
     mascota.edad = edad
@@ -44,7 +90,10 @@ def actualizar_mascota(
     return True
 
 
-def eliminar_mascota(mascotas: list[Mascota], mascota_id: str) -> bool:
+def eliminar_mascota(
+    mascotas: list[Mascota],
+    mascota_id: str,
+) -> bool:
     """Elimina una mascota mediante su identificador."""
     mascota = buscar_mascota(mascotas, mascota_id)
 
@@ -70,13 +119,13 @@ def filtrar_por_especie(
 ) -> list[Mascota]:
     """Devuelve las mascotas que pertenecen a una especie."""
     return [
-        mascota
-        for mascota in mascotas
-        if mascota.especie.lower() == especie.lower()
+        mascota for mascota in mascotas if mascota.especie.lower() == especie.lower()
     ]
 
 
-def obtener_mascota_mayor_edad(mascotas: list[Mascota]) -> Mascota | None:
+def obtener_mascota_mayor_edad(
+    mascotas: list[Mascota],
+) -> Mascota | None:
     """Devuelve la mascota de mayor edad."""
     if not mascotas:
         return None
@@ -84,7 +133,9 @@ def obtener_mascota_mayor_edad(mascotas: list[Mascota]) -> Mascota | None:
     return max(mascotas, key=lambda mascota: mascota.edad)
 
 
-def obtener_resumen(mascotas: list[Mascota]) -> dict[str, int | float]:
+def obtener_resumen(
+    mascotas: list[Mascota],
+) -> dict[str, int | float]:
     """Genera un resumen general de las mascotas registradas."""
     return {
         "total_mascotas": len(mascotas),
