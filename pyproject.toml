@@ -1,0 +1,23 @@
+[project]
+name = "recuperacion-python-2330175"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Jesús Armando Cavazos Castillo", email = "jesuscastill57@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+recuperacion-python-2330175 = "recuperacion_python_2330175:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.2",
+]
